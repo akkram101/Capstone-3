@@ -6,7 +6,7 @@ export default function Courses(){
 	// console.log(coursesData[0])
 
 	const courses = coursesData.map(course => {
-		console.log(course)
+		
 		return <CourseCard key={course.id} courseProp={course} />
 	})
 

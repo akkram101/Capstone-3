@@ -1,32 +1,27 @@
 
 import {Card, Row, Col, Button} from "react-bootstrap"
+import { useState } from 'react';
 
 export default function CourseCard({courseProp}) {
-	 // console.log(props) //object
-	/* { courseProp: {
-				id: "wdc001",
-				name: "PHP-Laravel",
-				description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea tenetur illo, delectus doloribus consequuntur facere exercitationem laborum blanditiis magnam sequi iste",
-				price: 25000,
-				onOffer: true
-	 		}
-	 	}
-	*/
-	console.log(courseProp)
-	/*
-		{
-			id: "wdc001",
-			name: "PHP-Laravel",
-			description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea tenetur illo, delectus doloribus consequuntur facere exercitationem laborum blanditiis magnam sequi iste",
-			price: 25000,
-			onOffer: true
- 		}
-	*/
+
+	const[count,setCount] = useState(0)
+	const[seat,seatCount] = useState(30)
 
 	const {name, description, price} = courseProp
-	// console.log(name)
-	// console.log(description)
-	// console.log(price)
+
+	const handleClick = () =>{
+		// console.log(`Im clicked`, count++)
+		setCount(count + 1)
+	}
+
+	const clickSeats = () =>{
+		if(seat>0){
+		seatCount(seat - 1)
+		}else{
+			return alert(`No more seats`)
+		}
+	}
+
 
 	return(
 		<Card className="m-5">
@@ -40,7 +35,10 @@ export default function CourseCard({courseProp}) {
 		    <Card.Text>
 		    	{price}
 		    </Card.Text>
-		    <Button className="btn-info">Enroll</Button>
+		    <Card.Text>Count: {count}</Card.Text>
+		    <Button className="btn-info" onClick={handleClick}>Enroll</Button>
+		    <Card.Text>Seats: {seat}</Card.Text>
+		    <Button className="btn-info" onClick={clickSeats}>Enroll</Button>
 		  </Card.Body>
 		</Card>
 	)
