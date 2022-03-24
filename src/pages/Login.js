@@ -1,10 +1,17 @@
 import {Form,Button,Col,Row,Container} from 'react-bootstrap'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
+// import {useNavigate} from 'react-router-dom'
+// import {UserContext} from '../UserContext'
 
 export default function Login(){
 	const [isDisabled, setIsDisabled] = useState(true)
 	const [email, setEmail] = useState("")
 	const [pw, setPw] = useState("")
+
+	// const navigate = useNavigate()
+
+	// const UserContext = useContext()
+	// const [user, setUser]=useContext(UserContext)
 
 	useEffect(()=>{
 		if(email != "" && pw != ""){
@@ -16,8 +23,39 @@ export default function Login(){
 
 	const loginUser = (e) =>{
 		e.preventDefault()
-		alert(`User login successfuly`)
+		fetch('http://localhost:3008/api/users/login', {
+			method:"POST",
+			headers: {
+				"Content-Type":"application/json"
+			},
+			body: JSON.stringify({
+				email:email,
+				password: pw
+			})
+		}).then(result => result.json())
+		.then(result => {
+			if(result){
+				localStorage.setItem('token', result.token)
+				localStorage.setItem('email', email)
+				alert(`Login Successful`)
+
+				setUser({
+					id:result.id,
+					isAdmin:result.isAdmin,
+					email:result.email
+				})
+
+				setEmail("")
+			 	navigate('/courses')
+		
+				
+			}else{
+				alert(`error`)
+			}
+		})
 	}
+
+
 
 
 

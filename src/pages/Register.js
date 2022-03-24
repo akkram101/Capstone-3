@@ -1,5 +1,7 @@
 import {Form, Button, Row, Col, Container} from 'react-bootstrap'
 import {useState, useEffect} from 'react'
+import {useNavigate} from 'react-router-dom'
+
 export default function Register(){
 
 	const [fn, setFN] = useState("")
@@ -8,6 +10,8 @@ export default function Register(){
 	const [pw, setPw] = useState("")
 	const [cpw, setCpw] = useState("")
 	const [isDisabled,setIsDisabled] = useState(true)
+
+	const navigate = useNavigate()
 
 	useEffect(() =>{
 		// console.log(`render`)
@@ -46,7 +50,7 @@ export default function Register(){
 				.then(response =>{
 					if(response){
 						alert(`User successfully registered`)
-						// window.location.href('/Login')
+						navigate('/login')
 					}else {
 						console.log(`ENGKK`)
 					}

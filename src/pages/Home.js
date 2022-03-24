@@ -1,19 +1,22 @@
 import {Fragment} from 'react'
-import AppNavbar from './../components/AppNavbar'
 import Banner from './../components/Banner'
-import Footer from './../components/Footer'
 import Highlights from './../components/Highlights'
-// import CourseCard from './../components/CourseCard'
+
 
 export default function Home(){
+
+	const data ={
+        title: "Welcome to Course Booking",
+        text: "Opportunbitetiuoahuisdabdfrfqa",
+        button: "Go to courses",
+        link: "/courses"
+    }	
+	
 	return(
-		// render navbar, banner & footer in the webpage via home.js
+		
 		<Fragment>
-			<AppNavbar/>
-			<Banner/>
-			<Highlights/>
-			{/*<CourseCard/>*/}
-			<Footer/>
+			<Banner bannerProp={data}/>
+			<Highlights/>	
 		</Fragment>
 	)
 }
