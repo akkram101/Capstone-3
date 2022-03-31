@@ -1,0 +1,320 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: 0;
+	font-family: 'Recursive', sans-serif;
+
+}
+
+html{
+	scroll-behavior: smooth;
+		background-color: #FAFAFA;
+}
+
+body{
+	background-color: #FAFAFA;
+}
+																																				/*HOME HAV*/
+.navbar{
+	display: flex;
+	align-items: center;
+	padding: 20px;
+}
+
+nav {
+	flex: 1;
+	text-align: right;
+}
+
+.navbar .button{
+	border-radius: 50px;
+}
+
+nav > ul{
+	/*display: inline-block;*/
+}
+
+nav>ul>li{
+	display: inline-block;
+	list-style-type: none;
+	margin-right: 20px;
+	padding-top: 20px;
+}
+
+header a{
+	text-decoration: none!important;
+	color: white!important;
+}
+
+
+header{
+	font-family: 'Recursive', sans-serif;
+	background-image: url(https://insanelygoodrecipes.com/wp-content/uploads/2020/05/Burger-with-fries-1024x536.png);
+	background-color: rgba(0, 0, 0, 0.6);
+	background-blend-mode: multiply;
+	min-height: 75vh;
+	background-position: center;
+	position: relative;
+	background-size: cover;
+}
+
+header h1{
+	font-weight: bold;
+	font-size: 4rem;
+}
+
+.headerText button{
+	margin-right: 20px;
+	border-radius: 50px;
+}
+
+.headerText{
+	font-family: 'Recursive', sans-serif;
+	margin-top: 150px;
+}
+
+.btn{
+	border-radius: 50px;
+}
+
+.best{
+	overflow: hidden;
+	margin-bottom: 100px;
+}
+
+.best a{
+	color: black;
+}
+
+
+.best h1{
+	font-weight: bold;
+}
+
+.card {
+	width: 18rem;
+}
+
+																																				/*MENU NAV*/
+.menuNav {
+	background-image: url(https://insanelygoodrecipes.com/wp-content/uploads/2020/05/Burger-with-fries-1024x536.png);
+	background-color: rgba(0, 0, 0, 0.6);
+	background-size: cover;
+	background-blend-mode: multiply;
+	background-position: top;
+	position: relative;
+}
+
+.menuNav a{
+	text-decoration: none!important;
+	color: white!important;
+}			
+
+/*Sticker*/
+
+.sticker{
+	min-height: 100vh;
+	position: fixed;
+	top: 9%;
+	right: 0px;
+	width: 25%;
+	border: 1px solid black;
+	background-image: url(https://image.shutterstock.com/image-vector/fast-food-seamless-pattern-hand-600w-770613382.jpg);
+	/*background-color: rgba(0, 0, 0, 0.8);
+	background-blend-mode: multiply;*/
+}
+
+/*Categories*/
+.categories a{
+	color: black!important;
+	text-decoration: none!important;
+}
+
+.categories{
+	background-color: white;
+	min-height: 60px;
+	width: 75%;
+}
+
+.categories h1{
+	border-bottom: 5px solid black;
+}
+
+.categories>ul{
+	text-align: center;
+	padding-top: 5px;
+}
+
+.categories >ul>li{
+	display: inline-block;
+	min-height: 50px;
+	padding-top: 10px;
+	border-bottom: 5px solid orange;
+	width: 19%;
+	margin-right: 10px;
+}
+
+/*Menu*/
+
+.menu{
+	font-family: 'Poppins', sans-serif;
+	background-color: #FAFAFA;
+}
+
+.menu h1{
+	margin-top: 50px;
+	margin-bottom: 50px;
+	border-bottom: 5px solid orange;
+	display: inline-block;
+	font-weight: bold;
+}
+.menu>.row{
+	min-height: 50vh;
+}
+
+.menu button{
+	border-radius: 5px;
+}
+
+
+/*SIDENAV*/
+
+.sideNav{
+	min-height: 100vh;
+	background-color: #F0F0F0;
+	border-right: 1px solid orange;
+	position: fixed;
+	left: 0px;
+	width: 15%;
+}
+
+.sideNav img {
+	border-radius: 50%;
+}
+
+.sideNav ul{
+	list-style-type: none;
+}
+
+.sideNav li{
+	padding: 10px;
+}
+
+.sideNav a{
+	color: black!important;
+	text-decoration: none!important;
+}
+
+.profile{
+	min-height: 200vh;
+	color: black;
+	width: 50%;
+}
+
+.profileRow{
+	min-height: 30vh;
+	background-color: white;
+	border-radius: 10px;
+	margin: 100px;
+	margin-top: 150px;
+	background-color: white;
+}
+
+
+
+.profile h4{
+
+	border-bottom: 1px solid lightgray;
+	font-weight: bold;
+}
+
+.profileNorm{
+	background-color: white;
+	border-radius: 10px;
+}
+
+tbody{
+	font-size: 0.85rem;
+
+}
+
+tbody .form-group{
+	font-size: 1rem;
+	margin: 10px;
+	padding: 10px;
+}
+
+tbody h1{
+	font-weight: bold;
+}
+
+
+.cart{
+	background-color: white;
+	width: 75%;
+}
+
+.cart #total{
+	font-weight: bold;
+}
+
+.cartHeader{
+	font-weight: bold;
+	border-bottom: 5px solid orange;  
+	margin: 100px;
+}
+
+.cartList{
+
+	background-color: #FAFAFA;
+	min-height: 100vh;
+
+}
+
+.cart .row {
+	border-bottom: 1px solid gray;
+}
+
+
+
+
+@media only screen and (max-width: 400px) {
+  .welcome-title > h1 {
+    font-size: 4rem;
+    text-align: center;
+  }
+ }
+
+ @media only screen and (max-width: 770px) {
+  .sticker{
+  	position: fixed;
+  	bottom: 0px;
+  	min-height: 5%;
+  	width: 50%;
+  	right: 25%;
+  	display: none;
+  }
+  .categories{
+  	width: 100%;
+  	font-size: 0.85rem;
+  }
+
+  .categories >ul>li{
+	border-bottom: 5px solid orange;
+	width: 15%;
+	margin-right: 10px;
+}
+  .navbar li{
+	font-size: 0.85rem;
+	}
+}
+
+
+
+@media only screen and (max-width: 1350px) {
+	.categories >ul>li{
+	width: 18%;
+	margin-right: 10px;
+}
+
+}

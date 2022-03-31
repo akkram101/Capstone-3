@@ -1,6 +1,13 @@
 import {Fragment} from 'react'
-import Banner from './../components/Banner'
-import Highlights from './../components/Highlights'
+import Bestseller from './../components/Bestseller'
+import AppNavbar from '../components/AppNavbar'
+const registerSubmit = document.getElementById('registerSubmit');
+const loginSubmit=document.getElementById(`loginSubmit`)
+const profile= document.getElementById(`profile`)
+const id=localStorage.getItem(`id`)
+const token=localStorage.getItem(`token`)
+
+
 
 
 export default function Home(){
@@ -15,8 +22,8 @@ export default function Home(){
 	return(
 		
 		<Fragment>
-			<Banner bannerProp={data}/>
-			<Highlights/>	
+			<AppNavbar />
+			<Bestseller />
 		</Fragment>
 	)
 }
