@@ -13,7 +13,7 @@ export function LoginModal(){
 
 	const LoginSubmit = (e) => {
 		(e).preventDefault()
-		fetch(`http://localhost:3009/api/users/login`, {
+		fetch(`https://capstone2-bederi.herokuapp.com/api/users/login`, {
 			method:"POST",
 			headers:{
 				"Content-Type":"application/json"
@@ -28,7 +28,7 @@ export function LoginModal(){
 			localStorage.setItem(`token`, result.token)
 			let token = localStorage.getItem(`token`)
 
-			fetch(`http://localhost:3009/api/users/profile`,{
+			fetch(`https://capstone2-bederi.herokuapp.com/api/users/profile`,{
 				method:"GET",
 				headers:{
 					"Authorization":`Bearer ${token}`
@@ -98,7 +98,7 @@ export function RegisterModal(){
 	const RegisterSubmit = (e) => {
 		(e).preventDefault()
 		if(pw == cpw){
-				fetch(`http://localhost:3009/api/users/email-exists`, {
+				fetch(`https://capstone2-bederi.herokuapp.com/api/users/email-exists`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -114,7 +114,7 @@ export function RegisterModal(){
 				.then(result => {
 					if(result == false){
 						
-						fetch(`http://localhost:3009/api/users/register`, {
+						fetch(`https://capstone2-bederi.herokuapp.com/api/users/register`, {
 							method: "POST",
 							headers:{
 								"Content-Type": "application/json",

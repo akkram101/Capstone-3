@@ -1,6 +1,5 @@
 import {Fragment, useState, useEffect} from 'react'
 import Navigation from '../components/Navbar'
-import Sticker from '../components/Sticker'
 import Categories from '../components/Categories'
 const token=localStorage.getItem(`token`)
 const id=localStorage.getItem(`id`)

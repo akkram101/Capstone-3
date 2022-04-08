@@ -7,7 +7,6 @@ import Home from './pages/Home'
 import Menu from './pages/Menu'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
-import Cart from './pages/Cart'
 
 
 
@@ -46,7 +45,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

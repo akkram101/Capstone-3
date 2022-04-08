@@ -1,6 +1,5 @@
 import {Fragment, useState, useEffect} from 'react'
 import Navigation from '../components/Navbar'
-import Sticker from '../components/Sticker'
 import Categories from '../components/Categories'
 import MenuAdminView from './MenuAdminView'
 const token=localStorage.getItem(`token`)
@@ -33,7 +32,7 @@ export default function Menu() {
 
 	const checkOut = (id) =>{
 		if(token!=undefined){
-			fetch(`http://localhost:3009/api/users/${id}`,{
+			fetch(`https://capstone2-bederi.herokuapp.com/api/users/${id}`,{
 				method:"GET",
 				headers:{
 					"Authorization":`Bearer ${token}`
@@ -44,7 +43,7 @@ export default function Menu() {
 
 				const cart=result.Order
 				if(cart.length>=1){
-					fetch(`http://localhost:3009/api/users/${id}/emptyCart`,{
+					fetch(`https://capstone2-bederi.herokuapp.com/api/users/${id}/emptyCart`,{
 						method:"PUT",
 						headers:{
 							"Authorization":`Bearer ${token}`
@@ -67,7 +66,7 @@ export default function Menu() {
 	}
 
 	const fetchCart = () =>{
-		fetch(`http://localhost:3009/api/users/${id}`,{
+		fetch(`https://capstone2-bederi.herokuapp.com/api/users/${id}`,{
 			method:"GET",
 			headers:{
 				"Authorization":`Bearer ${token}`
@@ -114,7 +113,7 @@ export default function Menu() {
 	}
 
 	const CartIncrement = (id, index) =>{
-		fetch(`http://localhost:3009/api/users/${id}/addCartQuant`,{
+		fetch(`https://capstone2-bederi.herokuapp.com/api/users/${id}/addCartQuant`,{
 			method:"PATCH",
 			headers:{
 				"Content-Type":"application/json",
@@ -154,7 +153,7 @@ export default function Menu() {
 	const addToCart = (meals,quantity) =>{
 		if(token!=undefined){
 			const {itemName, description, price, _id} = meals
-			fetch(`http://localhost:3009/api/users/order`,{
+			fetch(`https://capstone2-bederi.herokuapp.com/api/users/order`,{
 						method:"POST",
 						headers:{
 							"Content-Type":"application/json",
@@ -186,7 +185,7 @@ export default function Menu() {
 
 
 	useEffect( ()=>{
-	fetch(`http://localhost:3009/api/item/meals`,{
+	fetch(`https://capstone2-bederi.herokuapp.com/api/item/meals`,{
 			method:"GET"
 		})
 		.then(result=>result.json())
@@ -243,7 +242,7 @@ export default function Menu() {
 	}, [quantity])
 
 	useEffect( ()=>{
-	fetch(`http://localhost:3009/api/item/burgers`,{
+	fetch(`https://capstone2-bederi.herokuapp.com/api/item/burgers`,{
 			method:"GET"
 		})
 		.then(result=>result.json())
@@ -300,7 +299,7 @@ export default function Menu() {
 	}, [quantity])
 
 	useEffect( ()=>{
-	fetch(`http://localhost:3009/api/item/sides`,{
+	fetch(`https://capstone2-bederi.herokuapp.com/api/item/sides`,{
 			method:"GET"
 		})
 		.then(result=>result.json())
@@ -357,7 +356,7 @@ export default function Menu() {
 	}, [quantity])
 
 	useEffect( ()=>{
-	fetch(`http://localhost:3009/api/item/beverages`,{
+	fetch(`https://capstone2-bederi.herokuapp.com/api/item/beverages`,{
 			method:"GET"
 		})
 		.then(result=>result.json())
