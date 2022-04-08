@@ -133,7 +133,6 @@ header h1{
 .categories{
 	background-color: white;
 	min-height: 60px;
-	width: 75%;
 }
 
 .categories h1{
@@ -181,11 +180,8 @@ header h1{
 
 .sideNav{
 	min-height: 100vh;
-	background-color: #F0F0F0;
-	border-right: 1px solid orange;
-	position: fixed;
 	left: 0px;
-	width: 15%;
+	width: 300px;
 }
 
 .sideNav img {
@@ -251,10 +247,64 @@ tbody h1{
 
 .cart{
 	background-color: white;
-	width: 75%;
+	max-height: 100vh;
+	
 }
 
-.cart #total{
+.cart button{
+	position: absolute;
+	width: 80%;
+	top: 85%;
+	right: 10px;
+}
+
+.total{
+	border-top: 1px solid lightgray;
+}
+
+.table .fa{
+	font-size: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	text-decoration: none;
+	color: black!important;
+	background-color: #FFC107;
+}
+.cartbtn{
+	font-size: 10px;
+}
+
+.fa-map-marker{
+	font-size:20px;
+	color: red;
+}
+
+.note{
+	display: inline-block;
+	border-radius: 10px;
+	border: 1px solid lightgray;
+	width: 100%;
+}
+
+.cartbtn{
+	width: 25px;
+	height: 25px;
+}
+
+.itemName{
+	width: 200px;
+}
+
+.editModal{
+	width: 50%;
+}
+
+.modalimg{
+	width: 500px;
+	height: 500px;
+}
+
+/*.cart #total{
 	font-weight: bold;
 }
 
@@ -274,7 +324,39 @@ tbody h1{
 .cart .row {
 	border-bottom: 1px solid gray;
 }
+*/
 
+.profileContainer{
+	background-color: #FAFAFA;
+}
+
+.UserOrders a{
+	color: black!important;
+	text-decoration: none!important;
+}
+
+.UserOrders{
+	background-color: white;
+	min-height: 60px;
+}
+
+.UserOrders h1{
+	border-bottom: 5px solid black;
+}
+
+.UserOrders>ul{
+	text-align: center;
+	padding-top: 5px;
+}
+
+.UserOrders >ul>li{
+	display: inline-block;
+	min-height: 50px;
+	padding-top: 10px;
+	border-bottom: 5px solid orange;
+	width: 19%;
+	margin-right: 10px;
+}
 
 
 

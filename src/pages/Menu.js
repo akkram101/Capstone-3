@@ -2,28 +2,187 @@ import {Fragment, useState, useEffect} from 'react'
 import Navigation from '../components/Navbar'
 import Sticker from '../components/Sticker'
 import Categories from '../components/Categories'
-// import QuantitySelector from '../components/QuantitySelector'
+import MenuAdminView from './MenuAdminView'
 const token=localStorage.getItem(`token`)
+const id=localStorage.getItem(`id`)
+const admin=localStorage.getItem(`isAdmin`)
 export default function Menu() {
 
-	const [Meals,setMeals] =useState("")
-	const [Burgers,setBurgers] =useState("")
-	const [Sides,setSides] =useState("")
-	const [Beverages,setBeverages] =useState("")
+	const [Meals,setMeals] =useState()
+	const [Burgers,setBurgers] =useState()
+	const [Sides,setSides] =useState()
+	const [Beverages,setBeverages] =useState()
+	const [Cart, setCart]=useState()
+	const [Note,setNote]=useState("")
 
 	const [quantity, setQuantity]=useState(1)
+	const [CartQuant,setCartQuant]=useState()
+	const [total,setTotal]=useState(0)
 
 	const quantityIncrement = () =>{
 		setQuantity(prevQuantity => prevQuantity + 1)
 	}
 
 	const quantityDecrement = () =>{
-		setQuantity(prevQuantity => prevQuantity -1)
+		if(quantity>1){
+			setQuantity(prevQuantity => prevQuantity -1)
+		}else{
+			setQuantity(1)
+		}
 	}
 
-	// useEffect(()=>{
-	// 	console.log(`hello`)
-	// },[quantity])
+	const checkOut = (id) =>{
+		if(token!=undefined){
+			fetch(`http://localhost:3009/api/users/${id}`,{
+				method:"GET",
+				headers:{
+					"Authorization":`Bearer ${token}`
+				}
+			})
+			.then(result => result.json())
+			.then(result => {
+
+				const cart=result.Order
+				if(cart.length>=1){
+					fetch(`http://localhost:3009/api/users/${id}/emptyCart`,{
+						method:"PUT",
+						headers:{
+							"Authorization":`Bearer ${token}`
+						}
+					})
+					.then(result => result.json())
+					.then(result => {
+						alert('Order Successful')
+						setTotal(0)
+						setNote("")
+						fetchCart()
+					})
+				}else{
+					alert('No items in cart')
+				}
+			})
+		}else{
+			alert('Please Log in')
+		}
+	}
+
+	const fetchCart = () =>{
+		fetch(`http://localhost:3009/api/users/${id}`,{
+			method:"GET",
+			headers:{
+				"Authorization":`Bearer ${token}`
+			}
+		})
+		.then(result => result.json())
+		.then(result => {
+			let total=0
+			const cart=result.Order
+			if(cart.length>=1){
+				setCart(
+					cart.map(cartItem=>{
+							const cartRow=cart.indexOf(cartItem)+1
+							const index=cart.indexOf(cartItem)
+							const quantity=cartItem.quantity
+							return (
+								<tr key={cartItem._id}>
+								  <th scope="row">{cartRow}</th>
+								  <td className="itemName">{cartItem.itemName}</td>
+								  <td>{cartItem.price}</td>
+								  <td>
+								  	<a className="btn btn-warning mx-3" onClick={()=>CartDecrement(id,index,quantity)}>-</a>
+								  	<span>{cartItem.quantity}</span>
+								  	<a className="btn btn-warning mx-3" onClick={()=>CartIncrement(id,index)}>+</a>
+								  </td>
+								  <td>{(cartItem.price*cartItem.quantity)}</td>
+								</tr>
+								)
+						})
+					)
+			}else{
+				setCart(
+					<tr>
+					<td>No items in cart</td>
+					</tr>
+					)
+			}
+
+			cart.forEach(cartItem=>{
+				let subTotal=(cartItem.price*cartItem.quantity)
+					setTotal(total+=subTotal)
+				})
+			})
+	}
+
+	const CartIncrement = (id, index) =>{
+		fetch(`http://localhost:3009/api/users/${id}/addCartQuant`,{
+			method:"PATCH",
+			headers:{
+				"Content-Type":"application/json",
+				"Authorization":`Bearer ${token}`
+			},
+			body: JSON.stringify({
+				index:index
+			})
+		})
+		.then(result=>result.json())
+		.then(result=>{
+			fetchCart()
+		})
+	}
+
+	const CartDecrement = (id, index, quantity) =>{
+		if(quantity<=1){
+			alert(`Cannot be less than 1`)
+		}else{
+			fetch(`http://localhost:3009/api/users/${id}/lessCartQuant`,{
+			method:"PATCH",
+			headers:{
+				"Content-Type":"application/json",
+				"Authorization":`Bearer ${token}`
+			},
+			body: JSON.stringify({
+				index:index
+			})
+		})
+		.then(result=>result.json())
+		.then(result=>{
+			fetchCart()
+		})
+		}
+	}
+
+	const addToCart = (meals,quantity) =>{
+		if(token!=undefined){
+			const {itemName, description, price, _id} = meals
+			fetch(`http://localhost:3009/api/users/order`,{
+						method:"POST",
+						headers:{
+							"Content-Type":"application/json",
+							"Authorization":`Bearer ${token}`
+						},
+						body:JSON.stringify({
+							itemId:_id,
+							itemName:itemName,
+							quantity:quantity,
+							price:price,
+							totalAmount: (price*quantity)
+						})
+					})
+					.then(result=>result.json)
+					.then(result => {
+						setQuantity(1)
+						fetchCart()
+					})
+				}else{
+					alert('Please Log in')
+				}
+	}
+
+
+	useEffect(()=>{
+		fetchCart()
+	},[])
+
 
 
 	useEffect( ()=>{
@@ -56,10 +215,7 @@ export default function Menu() {
 						    <div className="modal-content">
 						      <div className="modal-header">
 						      	<img src="../images/sampleMeal.png" width="300px" height="300px" className="img-fluid modal-title mx-auto" />
-						        
-						        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={ ()=> setQuantity(1)}>
-						           	<span aria-hidden="true">&times;</span>
-						        </button>
+						     
 						      </div>
 						      <div className="modal-body text-left p-3 m-3">
 						        <h4 id="${_id}OrderName"><strong>{itemName}</strong></h4>
@@ -72,7 +228,7 @@ export default function Menu() {
 				         		</div>
 						      </div>
 						      <div className="modal-footer">
-						        <button type="submit" className="btn btn-warning btn-block" id={addCart}>Add to Cart</button>
+						        <button type="submit" className="btn btn-warning btn-block" data-dismiss="modal" onClick={()=>addToCart(meals,quantity)}>Add to Cart</button>
 						      </div>
 						    </div>
 						  </div>
@@ -116,9 +272,7 @@ export default function Menu() {
 						      <div className="modal-header">
 						      	<img src="../images/sampleBurger.png" width="300px" height="300px" className="img-fluid modal-title mx-auto" />
 						        
-						        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={ ()=> setQuantity(1)}>
-						           	<span aria-hidden="true">&times;</span>
-						        </button>
+						      
 						      </div>
 						      <div className="modal-body text-left p-3 m-3">
 						        <h4 id="${_id}OrderName"><strong>{itemName}</strong></h4>
@@ -131,7 +285,7 @@ export default function Menu() {
 				         		</div>
 						      </div>
 						      <div className="modal-footer">
-						        <button type="submit" className="btn btn-warning btn-block" id={addCart}>Add to Cart</button>
+						        <button type="submit" className="btn btn-warning btn-block" data-dismiss="modal" onClick={()=>addToCart(result,quantity)}>Add to Cart</button>
 						      </div>
 						    </div>
 						  </div>
@@ -175,9 +329,7 @@ export default function Menu() {
 						      <div className="modal-header">
 						      	<img src="../images/sampleSide.png" width="300px" height="300px" className="img-fluid modal-title mx-auto" />
 						        
-						        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={ ()=> setQuantity(1)}>
-						           	<span aria-hidden="true">&times;</span>
-						        </button>
+						        
 						      </div>
 						      <div className="modal-body text-left p-3 m-3">
 						        <h4 id="${_id}OrderName"><strong>{itemName}</strong></h4>
@@ -190,7 +342,7 @@ export default function Menu() {
 				         		</div>
 						      </div>
 						      <div className="modal-footer">
-						        <button type="submit" className="btn btn-warning btn-block" id={addCart}>Add to Cart</button>
+						        <button type="submit" className="btn btn-warning btn-block" data-dismiss="modal" onClick={()=>addToCart(result,quantity)}>Add to Cart</button>
 						      </div>
 						    </div>
 						  </div>
@@ -234,9 +386,7 @@ export default function Menu() {
 						      <div className="modal-header">
 						      	<img src="../images/sampleBeverage.png" width="300px" height="300px" className="img-fluid modal-title mx-auto" />
 						        
-						        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={ ()=> setQuantity(1)}>
-						           	<span aria-hidden="true">&times;</span>
-						        </button>
+						       
 						      </div>
 						      <div className="modal-body text-left p-3 m-3">
 						        <h4 id="${_id}OrderName"><strong>{itemName}</strong></h4>
@@ -249,7 +399,7 @@ export default function Menu() {
 				         		</div>
 						      </div>
 						      <div className="modal-footer">
-						        <button type="submit" className="btn btn-warning btn-block" id={addCart}>Add to Cart</button>
+						        <button type="submit" className="btn btn-warning btn-block" data-dismiss="modal" onClick={()=>addToCart(result,quantity)}>Add to Cart</button>
 						      </div>
 						    </div>
 						  </div>
@@ -263,218 +413,67 @@ export default function Menu() {
 		})
 	}, [quantity])
 
-
-
-	useEffect(()=>{fetch(`http://localhost:3009/api/item/burgers`,{
-			method:"GET"
-		})
-		.then(result=>result.json())
-		.then(result =>{
-			if(token == undefined){
-				result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				alert(`Please Log in`)
-				})})
-			}else {
-			result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				const Quantity = (parseInt(document.getElementById(`${result._id}quant`).textContent))
-				const{itemName, price, _id}=result
-
-
-				fetch(`http://localhost:3009/api/users/order`,{
-					method:"POST",
-					headers:{
-						"Content-Type":"application/json",
-						"Authorization":`Bearer ${token}`
-					},
-					body:JSON.stringify({
-						itemId:_id,
-						itemName:itemName,
-						quantity:Quantity,
-						price:price,
-						totalAmount: (price*Quantity)
-					})
-				})
-				.then(result=>result.json)
-				.then(result => {
-					alert(`Item added to cart`)
-					setQuantity(1)
-				})
-				})
-			})
-		} 
-	})
-	},[])
-	
-	useEffect(()=>{fetch(`http://localhost:3009/api/item/meals`,{
-			method:"GET"
-		})
-		.then(result=>result.json())
-		.then(result =>{
-			if(token == undefined){
-				result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				alert(`Please Log in`)
-				})})
-			}else {
-			result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				const MealQuantity = (parseInt(document.getElementById(`${result._id}quant`).textContent))
-				const{itemName, price, _id}=result
-
-
-				fetch(`http://localhost:3009/api/users/order`,{
-					method:"POST",
-					headers:{
-						"Content-Type":"application/json",
-						"Authorization":`Bearer ${token}`
-					},
-					body:JSON.stringify({
-						itemId:_id,
-						itemName:itemName,
-						quantity:MealQuantity,
-						price:price,
-						totalAmount: (price*MealQuantity)
-					})
-				})
-				.then(result=>result.json)
-				.then(result => {
-					alert(`Item added to cart`)
-					setQuantity(1)
-				})
-			})
-			})
-			}
-		})
-	},[])
-
-	useEffect(()=>{fetch(`http://localhost:3009/api/item/sides`,{
-			method:"GET"
-		})
-		.then(result=>result.json())
-		.then(result =>{
-			if(token == undefined){
-				result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				alert(`Please Log in`)
-				})})
-			}else {
-			result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				const Quantity = (parseInt(document.getElementById(`${result._id}quant`).textContent))
-				const{itemName, price, _id}=result
-
-
-				fetch(`http://localhost:3009/api/users/order`,{
-					method:"POST",
-					headers:{
-						"Content-Type":"application/json",
-						"Authorization":`Bearer ${token}`
-					},
-					body:JSON.stringify({
-						itemId:_id,
-						itemName:itemName,
-						quantity:Quantity,
-						price:price,
-						totalAmount: (price*Quantity)
-					})
-				})
-				.then(result=>result.json)
-				.then(result => {
-					alert(`Item added to cart`)
-					setQuantity(1)
-				})
-				})
-			})
-		} 
-	})
-	},[])
-
-	useEffect(()=>{fetch(`http://localhost:3009/api/item/beverages`,{
-			method:"GET"
-		})
-		.then(result=>result.json())
-		.then(result =>{
-			if(token == undefined){
-				result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				alert(`Please Log in`)
-				})})
-			}else {
-			result.forEach(result=>{
-				document.getElementById(`${result._id}addCart`).addEventListener("click",(e) =>{
-				e.preventDefault()
-				const Quantity = (parseInt(document.getElementById(`${result._id}quant`).textContent))
-				const{itemName, price, _id}=result
-
-
-				fetch(`http://localhost:3009/api/users/order`,{
-					method:"POST",
-					headers:{
-						"Content-Type":"application/json",
-						"Authorization":`Bearer ${token}`
-					},
-					body:JSON.stringify({
-						itemId:_id,
-						itemName:itemName,
-						quantity:Quantity,
-						price:price,
-						totalAmount: (price*Quantity)
-					})
-				})
-				.then(result=>result.json)
-				.then(result => {
-					alert(`Item added to cart`)
-					setQuantity(1)
-				})
-				})
-			})
-		} 
-	})
-	},[])
-
-
-
 	return(
 		<Fragment>
 			<Navigation />
-			<Sticker />
-			<Categories />
-			<div className="container-fluid menu">
-				<div className="row text-center">
-
-					<div className="col-12 col-md-8">
-						<h1 id="mealsh1">MEALS</h1>
-						<div className="row align-items-center" id="meals">
-						{Meals}
+			{
+				admin=="false" || admin==undefined
+			?
+			<Fragment>
+				<div className="container-fluid menu">
+					<div className="row text-center">
+						<div className="col-12 col-md-8">
+						<Categories />
+							<h1 id="mealsh1">MEALS</h1>
+							<div className="row align-items-center" id="meals">
+							{Meals}
+							</div>
+							<h1 id="burgersh1">BURGERS</h1>
+							<div className="row" id="burgers">
+							{Burgers}
+							</div>
+							<h1 id="sidesh1">SIDES</h1>
+							<div className="row " id="sides">
+							{Sides}															
+							</div>
+							<h1 id="beveragesh1">BEVERAGES</h1>
+							<div className="row " id="beverages">
+							{Beverages}	
+							</div>
 						</div>
-						<h1 id="burgersh1">BURGERS</h1>
-						<div className="row" id="burgers">
-						{Burgers}
-						</div>
-						<h1 id="sidesh1">SIDES</h1>
-						<div className="row " id="sides">
-						{Sides}
-								
-							
-						</div>
-						<h1 id="beveragesh1">BEVERAGES</h1>
-						<div className="row " id="beverages">
-						{Beverages}
-							
-							
+						<div className="col-12 col-md-4 cart sticky-top text-left">
+							<div className="cart m-3">
+							<p className="text-left"><i className="fa fa-map-marker"></i>  Delivering to: 1810 Antonio Rivera Street, Manila</p>
+							<table className="table">
+							  <thead>
+							    <tr>
+							      <th scope="col"></th>
+							      <th scope="col">Item Name</th>
+							      <th scope="col">Price</th>
+							      <th scope="col">Quantity</th>
+							      <th scope="col">Total</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							  {Cart}
+							  </tbody>
+							</table>
+							<div className="m-3 total p-3">
+								<p className="text-right">Subtotal:  <span><strong>&#8369;{total}</strong></span></p>
+								<p>Note:</p>
+								<input type="text" placeholder="Note to restaurant" className="p-3 d-block note" onChange={(e)=>setNote(e.target.value)}/>
+							</div>
+							<button className="btn btn-block btn-warning m-5" onClick={()=>checkOut(id)}>Check Out</button>
+							</div>					
 						</div>
 					</div>
 				</div>
-			</div>
+			</Fragment>
+			:
+			<Fragment>
+				<MenuAdminView />
+			</Fragment>
+			}
 		</Fragment>
 		)
 }

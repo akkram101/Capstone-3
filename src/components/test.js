@@ -1,17 +1,4 @@
-import {Fragment, useState, useEffect} from 'react'
-import Navigation from '../components/Navbar'
-import {Link} from 'react-router-dom'
-const admin=localStorage.getItem(`isAdmin`)
-const id=localStorage.getItem(`id`)
-const token=localStorage.getItem(`token`)
-
-export default function Profile(){
-	const[adminLength,setAdminL]=useState();
-	const[userLength,setUserL]=useState();
-	const[users,setUsers]=useState();
-	const[admins,setAdmins]=useState()
-
-	const fetchUsers = () =>{
+const fetchUsers = () =>{
 		fetch(`http://localhost:3009/api/users/users`,{
 				method:"GET",
 				headers:{
@@ -90,28 +77,29 @@ export default function Profile(){
 	}
 
 	useEffect(()=>{
+		fetchUserData()
 		fetchUsers()
 		fetchAdmins()
 	},[])
 
-	// const fetchUserData=()=>{
-	// 	fetch(`http://localhost:3009/api/users/${id}`,{
-	// 		method:"GET",
-	// 		headers:{
-	// 			"Authorization":`Bearer ${token}`
-	// 		}
-	// 	})
-	// 	.then(result => result.json())
-	// 	.then(result => {
-	// 		setUserId(`${result._id}`)
-	// 		setFullName(`${result.firstName} ${result.lastName}`)
-	// 		setEmail(`${result.email}`)
-	// 		setContact(`${result.contact}`)
-	// 		setGender(`${result.gender}`)
-	// 		setBday(`${result.bday}`)
-	// 		setAddress(`${result.address}`)
-	// 	})
-	// }
+	const fetchUserData=()=>{
+		fetch(`http://localhost:3009/api/users/${id}`,{
+			method:"GET",
+			headers:{
+				"Authorization":`Bearer ${token}`
+			}
+		})
+		.then(result => result.json())
+		.then(result => {
+			setUserId(`${result._id}`)
+			setFullName(`${result.firstName} ${result.lastName}`)
+			setEmail(`${result.email}`)
+			setContact(`${result.contact}`)
+			setGender(`${result.gender}`)
+			setBday(`${result.bday}`)
+			setAddress(`${result.address}`)
+		})
+	}
 
 	const handleDelete = (userEmail) =>{
 			fetch(`http://localhost:3009/api/users/deleteUser`,{
@@ -126,6 +114,7 @@ export default function Profile(){
 			})
 				.then(result => result)
 				.then(result=>{
+					alert(`User deleted`)
 					fetchUsers()
 					fetchAdmins()
 				})
@@ -144,6 +133,7 @@ export default function Profile(){
 			})
 				.then(result => result)
 				.then(result=>{
+					alert(`User is now an Admin`)
 					fetchUsers()
 					fetchAdmins()
 				})
@@ -162,49 +152,8 @@ export default function Profile(){
 			})
 				.then(result => result)
 				.then(result=>{
+					alert(`User is no longer an admin`)
 					fetchUsers()
 					fetchAdmins()
 				})
 			}
-
-	return(
-		<Fragment>
-		<Navigation />
-		<div className="container-fluid profileContainer">
-			<div className="row justify-content-center m-3">
-				<div className="col-10 col-md-8 sideNav m-5">
-				<h1 className="text-center">Admin Dashboard</h1>
-					<table className="table table-striped table-dark">
-					  <thead>
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">Name</th>
-					      <th scope="col">Email</th>
-					      <th scope="col">Created On</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-					    {admins}
-					  </tbody>
-					</table>
-
-					<table className="table table-striped table-dark">
-					  <thead>
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">Name</th>
-					      <th scope="col">Email</th>
-					      <th scope="col">Created On</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-					    {users}
-					  </tbody>
-					</table>
-
-				</div>
-			</div>
-		</div>
-		</Fragment>
-		)
-}

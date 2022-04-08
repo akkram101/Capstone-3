@@ -5,6 +5,7 @@ import {LoginModal, RegisterModal} from './Modal'
 import {useNavigate} from 'react-router-dom'
 
 const token = localStorage.getItem('token')
+const admin = localStorage.getItem('isAdmin')
 
 
 export default function AppNavBar(){
@@ -21,14 +22,24 @@ export default function AppNavBar(){
 
 	const Profile = () => {
 		if(token != null || token != undefined){
+
+			if(admin=="true"){
+
 				return(
 				<Fragment>
 					<a href='./profile'>PROFILE</a>
 					<Button variant="outline-warning" onClick={logout} className="button mx-3">Logout</Button>
 				</Fragment>
-			)
-
+				)
 			}else{
+				return(
+				<Fragment>
+					<Button variant="outline-warning" onClick={logout} className="button mx-3">Logout</Button>
+				</Fragment>
+				)
+			}
+
+		}else{
 				return(
 				<Fragment>
 					<LoginModal />
@@ -42,7 +53,7 @@ export default function AppNavBar(){
 		if(token != null || token != undefined){
 				return(
 				<Fragment>
-						<Button variant="outline-warning" className="button"><a href="./menu">Order Now</a></Button>
+						<Button variant="outline-warning" className="button"><a href="./Menu">Order Now</a></Button>
 				</Fragment>
 			)
 
@@ -69,7 +80,6 @@ export default function AppNavBar(){
 					<ul>
 						<li><a href="">HOME</a></li>
 						<li><a href="./Menu">MENU</a></li>
-						<li><a href="/Cart">CART</a></li>
 						<Profile />
 
 					</ul>
